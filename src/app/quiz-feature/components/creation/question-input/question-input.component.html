@@ -1,0 +1,13 @@
+<div class="question-input">
+  <input type="text" class="question-name" [(ngModel)]="questionText" placeholder="Enter question">
+  <ul>
+    <li class="option-data" *ngFor="let option of options; let i = index">
+      <option-input
+        [optionText]="option"
+        (remove)="removeOption(i)"
+      ></option-input>
+    </li>
+  </ul>
+
+  <button type="button" (click)="$event.preventDefault(); addOption()">Add Option</button>
+</div>
