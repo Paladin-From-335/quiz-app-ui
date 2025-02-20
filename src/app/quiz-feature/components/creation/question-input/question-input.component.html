@@ -1,13 +1,14 @@
 <div class="question-input">
   <input type="text" class="question-name" [(ngModel)]="questionText" placeholder="Enter question">
-  <ul>
-    <li class="option-data" *ngFor="let option of options; let i = index">
-      <option-input
-        [optionText]="option"
-        (remove)="removeOption(i)"
-      ></option-input>
+  <ul class="option-data">
+    <li *ngFor="let option of options.controls; let i = index">
+      <option-input [formGroup]="getAnswerOptions(i)"></option-input>
+      <div *ngIf="options.length >2">
+        <button type="button" (click)="$event.preventDefault(); removeOption(i)">x</button>
+      </div>
     </li>
   </ul>
 
   <button type="button" (click)="$event.preventDefault(); addOption()">Add Option</button>
 </div>
+

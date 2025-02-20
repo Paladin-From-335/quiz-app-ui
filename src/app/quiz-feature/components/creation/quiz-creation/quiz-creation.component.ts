@@ -1,17 +1,19 @@
 import {Component} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {NgForOf} from '@angular/common';
+import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {QuestionInputComponent} from '../question-input/question-input.component';
+import {NgForOf} from '@angular/common';
 
 @Component({
   selector: 'quiz-creation',
+  standalone: true,
   imports: [
     ReactiveFormsModule,
-    NgForOf,
-    QuestionInputComponent
+    QuestionInputComponent,
+    FormsModule,
+    NgForOf
   ],
   templateUrl: './quiz-creation.component.html',
-  styleUrl: './quiz-creation.component.css'
+  styleUrls: ['./quiz-creation.component.css']
 })
 export class QuizCreationComponent {
   quizForm: FormGroup;
@@ -19,9 +21,8 @@ export class QuizCreationComponent {
   constructor(private fb: FormBuilder) {
     this.quizForm = this.fb.group({
       quizName: ["", [Validators.required, Validators.minLength(3)]],
-      questions: this.fb.array([])
+      questions: this.fb.array([""])
     });
-    this.addQuestion();
   }
 
   get questions(): FormArray {
@@ -31,8 +32,9 @@ export class QuizCreationComponent {
   addQuestion() {
     const questionForm = this.fb.group({
       questionText: ["", [Validators.required, Validators.minLength(3)]],
-      options: this.fb.array([])
+      options: this.fb.array(["", ""], [Validators.minLength(2), Validators.maxLength(4)])
     });
+    this.questions.push(questionForm);
   }
 
   removeQuestion(index: number) {

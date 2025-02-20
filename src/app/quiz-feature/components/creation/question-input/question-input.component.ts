@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {NgForOf} from '@angular/common';
+import {FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {NgForOf, NgIf} from '@angular/common';
 import {OptionInputComponent} from '../option-input/option-input.component';
 
 @Component({
@@ -8,7 +8,9 @@ import {OptionInputComponent} from '../option-input/option-input.component';
   imports: [
     FormsModule,
     NgForOf,
-    OptionInputComponent
+    OptionInputComponent,
+    NgIf,
+    ReactiveFormsModule
   ],
   templateUrl: './question-input.component.html',
   styleUrl: './question-input.component.css'
@@ -17,15 +19,23 @@ export class QuestionInputComponent {
   @Input() questionText: string = "";
   @Output() remove = new EventEmitter<void>();
 
-  options: string[] = ["", ""];
+  options: FormArray<FormControl> = new FormArray<FormControl>([]);
 
   addOption() {
-    this.options.push("");
+    if (this.options.length < 4) {
+      this.options.push(new FormControl(""));
+    }
+  }
+
+
+  getAnswerOptions(index: number): FormGroup {
+    return this.options.at(index) as unknown as FormGroup;
   }
 
   removeOption(index: number) {
     if (this.options.length > 2) {
-      this.options.splice(index, 1);
+      this.options.removeAt(index);
     }
   }
+
 }
