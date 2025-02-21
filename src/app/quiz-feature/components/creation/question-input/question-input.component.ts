@@ -1,35 +1,32 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {Component, EventEmitter, Input, Output} from "@angular/core";
+import {FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgForOf, NgIf} from '@angular/common';
-import {OptionInputComponent} from '../option-input/option-input.component';
 
 @Component({
-  selector: 'question-input',
+  selector: "app-question-input",
+  standalone: true,
+  templateUrl: "./question-input.component.html",
+  styleUrls: ["./question-input.component.css"],
   imports: [
-    FormsModule,
-    NgForOf,
-    OptionInputComponent,
+    ReactiveFormsModule,
     NgIf,
-    ReactiveFormsModule
-  ],
-  templateUrl: './question-input.component.html',
-  styleUrl: './question-input.component.css'
+    NgForOf
+  ]
 })
 export class QuestionInputComponent {
-  @Input() questionText: string = "";
+  @Input() formGroup!: FormGroup; // Receiving FormGroup from parent
   @Output() remove = new EventEmitter<void>();
 
-  options: FormArray<FormControl> = new FormArray<FormControl>([new FormControl(""), new FormControl("")]);
+  get options(): FormArray {
+    return this.formGroup.get("options") as FormArray;
+  }
 
   addOption() {
     if (this.options.length < 4) {
-      this.options.push(new FormControl(""));
+      this.options.push(new FormGroup({
+        optionText: new FormControl("", [Validators.required, Validators.minLength(1)]) // Ensuring required validation
+      }));
     }
-  }
-
-
-  getAnswerOptions(index: number): FormGroup {
-    return this.options.at(index) as unknown as FormGroup;
   }
 
   removeOption(index: number) {
@@ -38,4 +35,7 @@ export class QuestionInputComponent {
     }
   }
 
+  getOptionFormControl(index: number): FormControl {
+    return this.options.at(index).get('optionText') as FormControl;
+  }
 }
