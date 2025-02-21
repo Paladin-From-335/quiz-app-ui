@@ -19,7 +19,7 @@ export class QuestionInputComponent {
   @Input() questionText: string = "";
   @Output() remove = new EventEmitter<void>();
 
-  options: FormArray<FormControl> = new FormArray<FormControl>([]);
+  options: FormArray<FormControl> = new FormArray<FormControl>([new FormControl(""), new FormControl("")]);
 
   addOption() {
     if (this.options.length < 4) {

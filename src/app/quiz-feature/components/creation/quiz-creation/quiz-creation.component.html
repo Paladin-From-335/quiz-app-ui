@@ -2,7 +2,7 @@
       (ngSubmit)="$event.preventDefault(); submitForm()">
   <label for="quiz-name">Quiz Name:</label>
   <input type="text" id="quiz-name" formControlName="quizName" required>
-  <ul formArrayName="questions">
+  <ul formArrayName="questions" class="question-data">
     <li *ngFor="let question of questions.controls; let i = index">
       <question-input [formGroup]="getQuestionFormGroup(i)"></question-input>
       <button type="submit" (click)="$event.preventDefault(); removeQuestion(i)">
@@ -11,5 +11,6 @@
     </li>
   </ul>
   <button type="submit" (click)="$event.preventDefault(); addQuestion()">Add Question</button>
+  <div></div>
   <button type="submit" [disabled]="quizForm.invalid">Submit Quiz</button>
 </form>
