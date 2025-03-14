@@ -1,14 +1,16 @@
 import {Component, Input} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 @Component({
   selector: 'option-input',
   imports: [
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   templateUrl: './option-input.component.html',
   styleUrl: './option-input.component.css'
 })
 export class OptionInputComponent {
-  @Input() optionText: string = "";
+  @Input() textControl!: FormControl;
+  @Input() isCorrectControl!: FormControl;
 }

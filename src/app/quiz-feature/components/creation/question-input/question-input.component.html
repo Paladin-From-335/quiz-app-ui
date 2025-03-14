@@ -1,9 +1,10 @@
 <div class="question-input" [formGroup]="formGroup">
-  <input type="text" class="question-name" formControlName="questionText" placeholder="Enter question">
+  <input type="text" class="question-name" formControlName="questionName" placeholder="Enter question">
 
   <ul class="option-data">
     <li *ngFor="let option of options.controls; let i = index">
-      <input type="text" [formControl]="getOptionFormControl(i)" placeholder="Enter option">
+      <option-input [textControl]="getOptionText(i)"
+                    [isCorrectControl]="getIsCorrectOption(i)"></option-input>
       <button type="button" (click)="removeOption(i)" *ngIf="options.length > 2">x</button>
     </li>
   </ul>

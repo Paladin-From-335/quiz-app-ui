@@ -1,4 +1,8 @@
 <div class="option-item">
-  <input type="text" class="option-input" name="option-input" placeholder="add an answer option"
-         [(ngModel)]="optionText">
+  <input type="text" class="option-input"
+         name="optionText" placeholder="Option text"
+         [formControl]="textControl">
+  <input type="checkbox" class="check-option"
+         name="isCorrect"
+         [formControl]="isCorrectControl">
 </div>
