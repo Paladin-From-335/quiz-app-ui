@@ -1,7 +1,8 @@
-import { Component } from "@angular/core";
+import {Component} from "@angular/core";
 import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import { QuestionInputComponent } from "../question-input/question-input.component";
+import {QuestionInputComponent} from "../question-input/question-input.component";
 import {NgForOf} from '@angular/common';
+import {QuizService} from '../../../services/quiz.service';
 
 @Component({
   selector: "app-quiz-creation",
@@ -13,7 +14,7 @@ import {NgForOf} from '@angular/common';
 export class QuizCreationComponent {
   quizForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private quizService: QuizService) {
     this.quizForm = this.fb.group({
       quizName: ["", [Validators.required, Validators.minLength(3)]],
       questions: this.fb.array([], Validators.minLength(1)) // Ensure at least one question
@@ -26,16 +27,18 @@ export class QuizCreationComponent {
     return this.quizForm.get("questions") as FormArray;
   }
 
-  addQuestion() {
-    const questionForm: FormGroup = this.fb.group({
-      questionText: ["", [Validators.required, Validators.minLength(3)]], // Question must be at least 3 chars
+  createQuestion() {
+    return this.fb.group({
+      questionName: ["", [Validators.required, Validators.minLength(3)]], // Question must be at least 3 chars
       options: this.fb.array([
         this.createOption(),
         this.createOption()
       ], Validators.minLength(2)) // At least 2 options
     });
+  }
 
-    this.questions.push(questionForm);
+  addQuestion() {
+    this.questions.push(this.createQuestion());
   }
 
   removeQuestion(index: number) {
@@ -46,7 +49,8 @@ export class QuizCreationComponent {
 
   createOption(): FormGroup {
     return this.fb.group({
-      optionText: ["", [Validators.required, Validators.minLength(1)]] // Option must be at least 1 char
+      optionName: ["", [Validators.required, Validators.minLength(1)]],
+      isCorrect: [false]
     });
   }
 
@@ -56,7 +60,11 @@ export class QuizCreationComponent {
 
   submitForm() {
     console.log("Form Valid?", this.quizForm.valid);
-    console.log("Quiz Data:", this.quizForm.value);
+    console.log("Quiz Data (JSON):", JSON.stringify(this.quizForm.value, null, 2));
+    this.quizService.createQuiz(this.quizForm.value).subscribe(
+      resp => {
+        console.log("Quiz created with success", resp);
+      });
   }
 
   protected readonly FormGroup = FormGroup;
